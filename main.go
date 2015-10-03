@@ -64,7 +64,7 @@ func CheckMAC(message, messageMAC, key []byte) bool {
 
 func main() {
 	flag.Parse()
-	logfp, err := os.OpenFile("/srv/www/sensorium.space/logs/github.log", os.O_WRONLY, os.ModeAppend)
+	logfp, err := os.OpenFile(*logfn, os.O_WRONLY, os.ModeAppend)
 	defer logfp.Close()
 	if err != nil {
 		log.Fatalln(err)
