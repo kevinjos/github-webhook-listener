@@ -13,10 +13,11 @@ import (
 )
 
 var (
-	addr   = flag.String("addr", ":8181", "http service address:port")
-	secret = flag.String("secret", "", "HMACed secret in POST header")
-	logfn  = flag.String("logfn", "", "full path to log file")
-	LOG    *log.Logger
+	addr    = flag.String("addr", ":8181", "http service address:port")
+	secret  = flag.String("secret", "", "HMACed secret in POST header")
+	logfn   = flag.String("logfn", "", "full path to log file")
+	runmake = flag.Bool("runmake", false, "run make all after git pull")
+	LOG     *log.Logger
 )
 
 func gitPullHandler(w http.ResponseWriter, r *http.Request) {
@@ -53,6 +54,17 @@ func gitPullHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		LOG.Println(err)
 	}
+
+	if !*runmake {
+		return
+	}
+
+	cmd = exec.Command("make", "all")
+	err = cmd.Run()
+	if err != nil {
+		LOG.Println(err)
+	}
+
 }
 
 func CheckMAC(message, messageMAC, key []byte) bool {
